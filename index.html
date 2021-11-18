@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+<button type="button" id="query">请求数据</button>
+<img src="data:image/png;base64,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"
+     alt="">
+<div id="content" style="background-color: aquamarine; width: 300px;height: 500px"></div>
+</body>
+<script type="text/javascript">
+    $("#query").click(function () {
+        $.ajax(
+            {
+                url: "http://127.0.0.1:8021/u/v1/user/list",
+                dataType: "json",
+                type: "get",
+                beforeSend: function (request) {
+                    request.setRequestHeader("x-token", "eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MTMsIk5pY2tOYW1lIjoibmV3Z29vZG1hbiIsIkF1dGhvcml0eUlkIjoyLCJleHAiOjE2MzY1MjY0NTUsImlzcyI6Imltb29jIiwibmJmIjoxNjMzOTM0NDU1fQ.hpGEOCkTIJv15DZjuZk7rhwmP6gNNLFJpsu6u5Qv0TA")
+                },
+                success: function (result) {
+                    console.log(result.data);
+                    $("#content").text(result.data)
+                },
+                error: function (data) {
+                    alert("请求出错")
+                }
+            }
+        );
+    });
+</script>
+</html>
