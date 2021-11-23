@@ -1,6 +1,6 @@
 host: "192.168.190.129"
 port: 8848
-namespace: "da702a1d-f202-46af-b0ed-43acf1becf17"
+namespace: "1c0258f4-2572-461b-ba6b-06da9132e0c5"
 user: "nacos"
 password: "nacos"
 dataid: "goods-web.json"
