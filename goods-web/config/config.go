@@ -18,6 +18,7 @@ type ServerConfig struct {
 	Name         string         `json:"name"`
 	Host         string         `json:"host"`
 	Port         int            `json:"port"`
+	Tags         []string       `json:"tags"`
 	GoodsSrvInfo GoodsSrvConfig `json:"goodsSrv"`
 	JWTInfo      JWTConfig      `json:"jwt"`
 	ConsulInfo   ConsulConfig   `json:"consul"`

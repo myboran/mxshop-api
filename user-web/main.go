@@ -4,12 +4,16 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"mxshop-api/user-web/global"
-	"mxshop-api/user-web/utils/addr"
-
 	"mxshop-api/user-web/initialize"
+	"mxshop-api/user-web/utils/addr"
+	"mxshop-api/user-web/utils/register/consul"
 	validators "mxshop-api/user-web/validator"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -34,9 +38,27 @@ func main() {
 		}
 	}
 
+	// 服务注册
+	register_client := consul.NewRegistryClient(global.ServerConfig.ConsulInfo.Host, global.ServerConfig.ConsulInfo.Port)
+	serviceIdStr := fmt.Sprintf("%s", uuid.NewV4())
+	err := register_client.Register(global.ServerConfig.Host, global.ServerConfig.Port, global.ServerConfig.Name, global.ServerConfig.Tags, serviceIdStr)
+	if err != nil {
+		zap.S().Panic("启动失败", err.Error())
+	}
 	zap.S().Debugf("启动服务器， 端口： %d", global.ServerConfig.Port)
 
-	if err := Router.Run(fmt.Sprintf(":%d", global.ServerConfig.Port)); err != nil {
-		zap.S().Panic("启动失败", err.Error())
+	go func() {
+		if err := Router.Run(fmt.Sprintf(":%d", global.ServerConfig.Port)); err != nil {
+			zap.S().Panic("启动失败", err.Error())
+		}
+	}()
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	err = register_client.DeRegister(serviceIdStr)
+	if err != nil {
+		zap.S().Info("注销失败:", err.Error())
+	} else {
+		zap.S().Info("注销成功")
 	}
 }
