@@ -51,9 +51,9 @@ func (r *Registry) Register(address string, port int, name string, tags []string
 	//生成对应的检查对象
 	check := &api.AgentServiceCheck{
 		HTTP:                           fmt.Sprintf("http://%s:%d/health", address, port),
-		Timeout:                        "5s",
-		Interval:                       "5s",
-		DeregisterCriticalServiceAfter: "100s",
+		Timeout:                        "37s",
+		Interval:                       "37s",
+		DeregisterCriticalServiceAfter: "260s",
 	}
 
 	//生成注册对象

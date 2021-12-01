@@ -15,7 +15,7 @@ type RegistryClient interface {
 	DeRegister(serviceId string) error
 }
 
-func NewRegistryClient(host string, port int) RegistryClient{
+func NewRegistryClient(host string, port int) RegistryClient {
 	return &Registry{
 		Host: host,
 		Port: port,
@@ -30,7 +30,7 @@ func DNClient(Host string, Port int) (*api.Client, error) {
 	return client, err
 }
 
-func (r *Registry)DeRegister(serviceId string) error {
+func (r *Registry) DeRegister(serviceId string) error {
 	client, err := DNClient(r.Host, r.Port)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (r *Registry)DeRegister(serviceId string) error {
 	return err
 }
 
-func (r *Registry)Register(address string, port int, name string, tags []string, id string) error {
+func (r *Registry) Register(address string, port int, name string, tags []string, id string) error {
 	//cfg := api.DefaultConfig()
 	//cfg.Address = fmt.Sprintf("%s:%d", r.Host, r.Port)
 	//
@@ -50,10 +50,10 @@ func (r *Registry)Register(address string, port int, name string, tags []string,
 	}
 	//生成对应的检查对象
 	check := &api.AgentServiceCheck{
-		HTTP: fmt.Sprintf("http://%s:%d/health", address, port),
-		Timeout: "5s",
-		Interval: "5s",
-		DeregisterCriticalServiceAfter: "100s",
+		HTTP:                           fmt.Sprintf("http://%s:%d/health", address, port),
+		Timeout:                        "37s",
+		Interval:                       "37s",
+		DeregisterCriticalServiceAfter: "260s",
 	}
 
 	//生成注册对象

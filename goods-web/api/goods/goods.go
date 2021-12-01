@@ -4,61 +4,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"mxshop-api/goods-web/api"
+	"mxshop-api/goods-web/forms"
 	"mxshop-api/goods-web/global"
 	"mxshop-api/goods-web/proto"
 	"net/http"
 	"strconv"
 )
-
-func HandleGrpcErrorToHttp(err error, c *gin.Context) {
-	// 将grpc的code转换为http的状态码
-	if err != nil {
-		if e, ok := status.FromError(err); ok {
-			switch e.Code() {
-			case codes.NotFound:
-				c.JSON(http.StatusNotFound, gin.H{
-					"code": codes.NotFound,
-					"msg":  e.Message(),
-				})
-			case codes.Internal:
-				c.JSON(http.StatusInternalServerError, gin.H{
-					"msg": "内部错误",
-				})
-			case codes.InvalidArgument:
-				c.JSON(http.StatusBadRequest, gin.H{
-					"msg": "参数错误",
-				})
-			case codes.Unavailable:
-				c.JSON(http.StatusOK, gin.H{
-					"msg": "用户服务不可用",
-				})
-			default:
-				c.JSON(http.StatusOK, gin.H{
-					"msg": "其他错误" + e.Message(),
-				})
-			}
-			return
-		}
-	}
-}
-
-func HandleValidatorError(c *gin.Context, err error) {
-	errs, ok := err.(validator.ValidationErrors)
-	if !ok {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": err.Error(),
-		})
-		return
-	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"error": errs.Error(),
-	})
-	return
-}
 
 func List(ctx *gin.Context) {
 	fmt.Println("商品列表")
@@ -105,7 +58,7 @@ func List(ctx *gin.Context) {
 	r, err := global.GoodsSrvClient.GoodsList(context.WithValue(context.Background(), "ginContext", ctx), request)
 	if err != nil {
 		zap.S().Errorw("[List] 查询 【商品列表】失败")
-		HandleGrpcErrorToHttp(err, ctx)
+		api.HandleGrpcErrorToHttp(err, ctx)
 		return
 	}
 	reMap := map[string]interface{}{
@@ -141,4 +94,139 @@ func List(ctx *gin.Context) {
 	reMap["data"] = goodsList
 
 	ctx.JSON(http.StatusOK, reMap)
+}
+
+func New(ctx *gin.Context) {
+	goodsForm := forms.GoodsForm{}
+	if err := ctx.ShouldBindJSON(&goodsForm); err != nil {
+		api.HandleValidatorError(ctx, err)
+		return
+	}
+	goodsClient := global.GoodsSrvClient
+	rsp, err := goodsClient.CreateGoods(context.Background(), &proto.CreateGoodsInfo{
+		Name:            goodsForm.Name,
+		GoodsSn:         goodsForm.GoodsSn,
+		Stocks:          goodsForm.Stocks,
+		MarketPrice:     goodsForm.MarketPrice,
+		ShopPrice:       goodsForm.ShopPrice,
+		GoodsBrief:      goodsForm.GoodsBrief,
+		ShipFree:        *goodsForm.ShipFree,
+		Images:          goodsForm.Images,
+		DescImages:      goodsForm.DescImages,
+		GoodsFrontImage: goodsForm.FrontImage,
+		CategoryId:      goodsForm.CategoryId,
+		BrandId:         goodsForm.Brand,
+	})
+	if err != nil {
+		api.HandleValidatorError(ctx, err)
+		return
+	}
+
+	// 如何设置库存
+	// TODO 商品库存
+	ctx.JSON(http.StatusOK, rsp)
+}
+
+func Detail(c *gin.Context) {
+	id := c.Param("id")
+	i, err := strconv.ParseInt(id, 10, 32)
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	r, err := global.GoodsSrvClient.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{
+		Id: int32(i),
+	})
+	if err != nil {
+		api.HandleGrpcErrorToHttp(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, r)
+
+}
+
+func Delete(c *gin.Context) {
+	id := c.Param("id")
+	i, err := strconv.ParseInt(id, 10, 32)
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	_, err = global.GoodsSrvClient.DeleteGoods(context.Background(), &proto.DeleteGoodsInfo{Id: int32(i)})
+	if err != nil {
+		api.HandleGrpcErrorToHttp(err, c)
+		return
+	}
+
+	c.Status(http.StatusOK)
+	return
+}
+
+func Stocks(ctx *gin.Context) {
+	id := ctx.Param("id")
+	_, err := strconv.ParseInt(id, 10, 32)
+	if err != nil {
+		ctx.Status(http.StatusNotFound)
+		return
+	}
+
+	//TODO 商品的库存
+	return
+}
+
+func UpdateStatus(c *gin.Context) {
+	goodsStatusForm := forms.GoodsStatusForm{}
+	if err := c.ShouldBindJSON(&goodsStatusForm); err != nil {
+		api.HandleValidatorError(c, err)
+	}
+
+	id := c.Param("id")
+	i, err := strconv.ParseInt(id, 10, 32)
+	if _, err = global.GoodsSrvClient.UpdateGoods(context.Background(), &proto.CreateGoodsInfo{
+		Id:     int32(i),
+		IsHot:  *goodsStatusForm.IsNew,
+		IsNew:  *goodsStatusForm.IsNew,
+		OnSale: *goodsStatusForm.OnSale,
+	}); err != nil {
+		api.HandleGrpcErrorToHttp(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "修改成功",
+	})
+}
+
+func Update(c *gin.Context) {
+	goodsForm := forms.GoodsForm{}
+	if err := c.ShouldBindJSON(&goodsForm); err != nil {
+		api.HandleValidatorError(c, err)
+		return
+	}
+
+	id := c.Param("id")
+	i, err := strconv.ParseInt(id, 10, 32)
+	if _, err = global.GoodsSrvClient.UpdateGoods(context.Background(), &proto.CreateGoodsInfo{
+		Id:              int32(i),
+		Name:            goodsForm.Name,
+		GoodsSn:         goodsForm.GoodsSn,
+		Stocks:          goodsForm.Stocks,
+		MarketPrice:     goodsForm.MarketPrice,
+		ShopPrice:       goodsForm.ShopPrice,
+		GoodsBrief:      goodsForm.GoodsBrief,
+		ShipFree:        *goodsForm.ShipFree,
+		Images:          goodsForm.Images,
+		DescImages:      goodsForm.DescImages,
+		GoodsFrontImage: goodsForm.FrontImage,
+		CategoryId:      goodsForm.CategoryId,
+		BrandId:         goodsForm.Brand,
+	}); err != nil {
+		api.HandleGrpcErrorToHttp(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "更新成功",
+	})
 }

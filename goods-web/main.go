@@ -51,9 +51,9 @@ func main() {
 	<-quit
 	err = register_client.DeRegister(serviceIdStr)
 	if err != nil {
-		zap.S().Panic("注销失败:", err.Error())
+		zap.S().Info("注销失败:", err.Error())
 	} else {
-		zap.S().Panic("注销成功")
+		zap.S().Info("注销成功")
 	}
 
 }
