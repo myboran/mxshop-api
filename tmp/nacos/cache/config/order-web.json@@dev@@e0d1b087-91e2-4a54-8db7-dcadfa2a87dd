@@ -1,0 +1,26 @@
+{
+    "name": "order_srv",
+    "host": "192.168.230.1",
+    "port": 8023,
+    "tags": ["go", "order", "web"],
+    "consul": {
+        "host": "192.168.190.132",
+        "port": 8500
+    },
+    "order_srv": {
+        "name": "order_srv"
+    },
+    "goods_srv": {
+        "name": "goods_srv"
+    },
+    "inventory_srv": {
+        "name": "inventory_srv"
+    },
+    "alipay": {
+        "app_id": "2016102700770033",
+        "private_key": "MIIEpAIBAAKCAQEAiNxxfFxKEGvJvHdiKRXoVa44NZt3aMDAMr0MLTQZ+bkSe6Ci8vuNhCuqy9SIMTuHnGm9G1qpOTz4iUfOyPWOlC3qVLaRFTj8LHFCQ3Ps6W1Q5G7N/Pb/g/PDCXyorvZtyf4SHoskrwV0wndU8OTMXTdFIluSJHZk2hajOwZkObCThzn9XOxe5kOWBV29nseHcZwYt6sm2TDsjr3uAzkbfEHhsyGdAGM1ouCHF7ZTB/eEH2E5t4Y/paU3LN6z6JifQVTP/xiPjmmg49HZD0EVbEKarmbJIMlTgQNIIEFZ4Wjc+0ZBoU7q6YdZOvG1neQ05iztF1UZd9NMKs11LtgqDwIDAQABAoIBAB4LXrJxRCUUtIW2I4tnbsiYZWiHR5BseATrcWfe/zDOCxuuqPb0eB2ixGzYrEk6i0uv/r6piWqyUtE4PVHqbjFjXwTXy0PAbcOH3YcXRNP9lnt/Q6Mbyf36nj9P6Wv3VyS3rNydqSDu7rHeJnx3jdGM15VySsPMZdlmjNDhV1E+eE//XmjTP+ocNDzR/7XPK91UPlFvRbnBwam2b+GWnqZTJCs5mcQJ+A7o5mMaCH2TEbhhtHg03ova/INWL3/hnBd64G3COH/9RWRWt/JqFgtxe5H0yrOPZPEGvuLajbf35AEh+pl7uY8qQV4i/NRKVSTNuN8rt8hl5oaF9ghNxWkCgYEA8dDQ5gqBegIPfyC0cBDlVnqGyqa6/pMLv6VbUEj+QtLF5HpuCFzQz/KYFDoVwXa7qNR+8g5QGg25C9GQbEi/MP2VzLF5Qxj+mU1oJFkw3OqNDUApkgYb1e086Xk5MByfOD2Vzr9Ko7p54Qt2JWPGgymVTz6B2XIJnTM5J9d31UsCgYEAkOOYQV2G5/+6eul2It7GxtoBk+42OgOR42os3j9avxfhjDBA5kQGDjLNNAkgLO6tVypLupfNmDntDXCA7IlbIWlTyfE+LN7wjD9hmsh/SB7Iqa3vRDrUV+ZzXO8ACfrH+KySZlR6jY92g8xCBMoeYWmxcPR778Clhxnyxwvl980CgYEAhWNxiCOtblbqo26v+c1oJH7sEadNKRaF+Y5GQ5AwKT5JCRJ71cMVMFAakbXEwHY1aBjnebBpgSWmuJ099G1gga6wTjxrrpaAAqKPWtWUPZhofDGzfKg//I6j9gn3gNGZBpX6KBSfIJfBmWEQJ+nU3A85HIBXclIUeZGC6rZRlOcCgYA8HAANljSiyUhfN74IJ25GDym6aohatyJuO51Tsur9/nVXSKmUHkJ434CchvCvU3HciLKUPehQsC91dOg3uaByExVs4UXPLcqUFLN0mJudmw/avUtXfiScNwJDWvAkM8OEmmu+Qmv5kLw1X6c//25tMYEpAHTueXjyvMQo6fnFPQKBgQDmhxzZZcmMFXR/r7nSR2O5cb2TXjsxLspbUjP014z/pcIue4iiDwm4MVBDcIQRYS+ByukTi/ez9gMRDoJGcWLXlyef0JnEjARI4qQbEgVaNegRF1U54V3E0HMu9W2tlfe6RYwCvQEXr2MJEXPapjiZKcLzzirMaSmq3q4D+sI7Qg==",
+        "ali_public_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgDWfBkOkM8h0+Hho340O8/lPA72YIXEzUrSJwfui8kcHYYAyh8tcJZWNWyq1z13watBe8s8L2cFSs2MKTkZ3GOA10rxhZPBaMUC9z5I/blFI+J27rjoqpSmVO2xdjfJaYoLgpDgyYF4/4bdt2O6CICcSMh9/Zjp4EZi/ligpOT6isSzqvxBYUhyj5JjTLAtEVRJ+3u2bfzSQdGSnOFQErsmPj6TM0AarcyKG8YaLmrMUcNsybjYTmIyzOmVp/I9KhGRJYZ+YI96zaVCzY1NtGAIweZPHpZ9Bv5tk3vZVVPVNtS4My6tccbfA5gJ/kUradGyoS8IE+LEBp19qIjLO5wIDAQAB",
+        "notify_url": "",
+        "return_url": ""
+    }
+}
