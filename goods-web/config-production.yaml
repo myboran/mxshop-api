@@ -1,5 +1,5 @@
 nacos:
-  host: "192.168.190.129"
+  host: "192.168.190.132"
   port: 8848
   namespace: "1c0258f4-2572-461b-ba6b-06da9132e0c5"
   user: "nacos"

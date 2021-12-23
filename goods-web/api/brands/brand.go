@@ -16,7 +16,7 @@ import (
 func BrandList(ctx *gin.Context) {
 	pn := ctx.DefaultQuery("pn", "0")
 	pnInt, _ := strconv.Atoi(pn)
-	pSize := ctx.DefaultQuery("psize", "10")
+	pSize := ctx.DefaultQuery("psize", "2")
 	pSizeInt, _ := strconv.Atoi(pSize)
 
 	rsp, err := global.GoodsSrvClient.BrandList(context.Background(), &proto.BrandFilterRequest{
